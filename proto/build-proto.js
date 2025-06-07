@@ -99,17 +99,20 @@ async function main() {
 	const protoFiles = await globby("*.proto", { cwd: SCRIPT_DIR, realpath: true })
 
 	// Build the protoc command with proper path handling for cross-platform
-	const tsProtocCommand = [
-		protoc,
-		`--proto_path="${SCRIPT_DIR}"`,
+	const tsProtocArgs = [
+		`--proto_path=.`,
 		`--plugin=protoc-gen-ts_proto="${tsProtoPlugin}"`,
 		`--ts_proto_out="${TS_OUT_DIR}"`,
 		"--ts_proto_opt=outputServices=generic-definitions,env=node,esModuleInterop=true,useDate=false,useOptionals=messages",
-		...protoFiles,
-	].join(" ")
+		...protoFiles.map(f => path.basename(f)),
+	]
 	try {
 		console.log(chalk.cyan(`Generating TypeScript code for:\n${protoFiles.join("\n")}...`))
-		execSync(tsProtocCommand, { stdio: "inherit" })
+		execSync(`"${protoc}" ${tsProtocArgs.join(" ")}`, {
+			stdio: "inherit",
+			shell: true,
+			cwd: SCRIPT_DIR
+		})
 	} catch (error) {
 		console.error(chalk.red("Error generating TypeScript for proto files:"), error)
 		process.exit(1)
@@ -119,16 +122,19 @@ async function main() {
 	await fs.mkdir(descriptorOutDir, { recursive: true })
 
 	const descriptorFile = path.join(descriptorOutDir, "descriptor_set.pb")
-	const descriptorProtocCommand = [
-		protoc,
-		`--proto_path="${SCRIPT_DIR}"`,
+	const descriptorProtocArgs = [
+		`--proto_path=.`,
 		`--descriptor_set_out="${descriptorFile}"`,
 		"--include_imports",
-		...protoFiles,
-	].join(" ")
+		...protoFiles.map(f => path.basename(f)),
+	]
 	try {
 		console.log(chalk.cyan("Generating descriptor set..."))
-		execSync(descriptorProtocCommand, { stdio: "inherit" })
+		execSync(`"${protoc}" ${descriptorProtocArgs.join(" ")}`, {
+			stdio: "inherit",
+			shell: true,
+			cwd: SCRIPT_DIR
+		})
 	} catch (error) {
 		console.error(chalk.red("Error generating descriptor set for proto file:"), error)
 		process.exit(1)

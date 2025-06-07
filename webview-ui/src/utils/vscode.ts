@@ -1,5 +1,15 @@
 import { WebviewMessage } from "@shared/WebviewMessage"
-import type { WebviewApi } from "vscode-webview"
+
+// VSCode webview types are provided globally by @types/vscode-webview
+declare global {
+	function acquireVsCodeApi(): WebviewApi<unknown>
+}
+
+interface WebviewApi<T> {
+	postMessage(message: any): void
+	getState(): T | undefined
+	setState<T>(state: T): T
+}
 
 /**
  * A utility wrapper around the acquireVsCodeApi() function, which enables
