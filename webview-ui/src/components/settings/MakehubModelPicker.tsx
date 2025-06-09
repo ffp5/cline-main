@@ -1,4 +1,4 @@
-import { VSCodeLink } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import Fuse from "fuse.js"
 import React, { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react"
 import { useMount } from "react-use"
@@ -84,7 +84,7 @@ export interface MakehubModelPickerProps {
 }
 
 const MakehubModelPicker: React.FC<MakehubModelPickerProps> = ({ isPopup }) => {
-	const { apiConfiguration, setApiConfiguration, makehubModels } = useExtensionState()
+	const { apiConfiguration, setApiConfiguration, makehubModels, refreshMakehubModels } = useExtensionState()
 
 	// Initial state based on the currently selected model
 	const initialModelId = apiConfiguration?.makehubModelId || makehubDefaultModelId
@@ -97,6 +97,7 @@ const MakehubModelPicker: React.FC<MakehubModelPickerProps> = ({ isPopup }) => {
 
 	// States for model descriptions and information
 	const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+	const [isRefreshing, setIsRefreshing] = useState(false)
 
 	// References for accessibility and scrolling
 	const dropdownRef = useRef<HTMLDivElement>(null)
@@ -261,6 +262,18 @@ const MakehubModelPicker: React.FC<MakehubModelPickerProps> = ({ isPopup }) => {
 		}
 	}
 
+	// Handle refresh
+	const handleRefresh = async () => {
+		setIsRefreshing(true)
+		try {
+			await refreshMakehubModels()
+		} catch (error) {
+			console.error("Failed to refresh MakeHub models:", error)
+		} finally {
+			setIsRefreshing(false)
+		}
+	}
+
 	// Check if selected model has information
 	const hasInfo = useMemo(() => {
 		try {
@@ -270,6 +283,14 @@ const MakehubModelPicker: React.FC<MakehubModelPickerProps> = ({ isPopup }) => {
 			return false
 		}
 	}, [modelIds, apiConfiguration?.makehubModelId])
+
+	// Auto-refresh models when MakeHub API key changes
+	useEffect(() => {
+		if (apiConfiguration?.makehubApiKey && Object.keys(makehubModels).length <= 1) {
+			// Only refresh if we have an API key but minimal models (just default)
+			handleRefresh()
+		}
+	}, [apiConfiguration?.makehubApiKey])
 
 	return (
 		<div style={{ width: "100%" }}>
@@ -282,9 +303,19 @@ const MakehubModelPicker: React.FC<MakehubModelPickerProps> = ({ isPopup }) => {
 				`}
 			</style>
 			<div style={{ display: "flex", flexDirection: "column" }}>
-				<label htmlFor="model-search">
-					<span style={{ fontWeight: 500 }}>Model</span>
-				</label>
+				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+					<label htmlFor="model-search">
+						<span style={{ fontWeight: 500 }}>Model</span>
+					</label>
+					<VSCodeButton
+						appearance="icon"
+						onClick={handleRefresh}
+						disabled={isRefreshing}
+						aria-label="Refresh MakeHub models"
+						title="Refresh MakeHub models">
+						<span className={`codicon ${isRefreshing ? "codicon-loading codicon-modifier-spin" : "codicon-refresh"}`} />
+					</VSCodeButton>
+				</div>
 
 				<DropdownWrapper ref={dropdownRef}>
 					<div style={{ position: "relative" }}>

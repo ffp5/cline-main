@@ -1,30 +1,16 @@
 import { useCallback, useState } from "react"
 import { VSCodeTextField, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react"
-import type { ProviderSettings } from "@roo-code/types"
-import { makehubDefaultModelId } from "@roo-code/types"
-import type { RouterModels } from "@roo/api"
-
-import { vscode } from "@src/utils/vscode"
-import { useAppTranslation } from "@src/i18n/TranslationContext"
-import { VSCodeButtonLink } from "@src/components/common/VSCodeButtonLink"
-import { Button, Slider } from "@src/components/ui"
-
-import { inputEventTransform } from "../transforms"
+import { ApiConfiguration, makehubDefaultModelId, ModelInfo } from "@shared/api"
+import { useExtensionState } from "@/context/ExtensionStateContext"
+import { ModelsServiceClient } from "@/services/grpc-client"
+import { EmptyRequest } from "@shared/proto/common"
 
 type MakeHubProps = {
-	apiConfiguration: ProviderSettings
-	setApiConfigurationField: (field: keyof ProviderSettings, value: ProviderSettings[keyof ProviderSettings]) => void
-	routerModels?: RouterModels
-	refetchRouterModels: () => void
+	// For compatibility with the existing Cline system
 }
 
-export const MakeHub = ({
-	apiConfiguration,
-	setApiConfigurationField,
-	routerModels,
-	refetchRouterModels,
-}: MakeHubProps) => {
-	const { t } = useAppTranslation()
+export const MakeHub = ({}: MakeHubProps) => {
+	const { apiConfiguration, setApiConfiguration, makehubModels } = useExtensionState()
 	const [didRefetch, setDidRefetch] = useState<boolean>(false)
 
 	const handleInputChange = useCallback(

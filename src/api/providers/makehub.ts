@@ -9,6 +9,12 @@ import { ApiStream, ApiStreamUsageChunk } from "../transform/stream"
 import { convertToOpenAiMessages } from "../transform/openai-format"
 import { convertToR1Format } from "../transform/r1-format"
 
+// Package info for metadata headers
+const Package = {
+	publisher: "saoudrizwan",
+	name: "claude-dev"
+}
+
 export interface MakehubModelResponse {
 	context: number
 	model_id: string
@@ -43,6 +49,22 @@ export interface MakehubModelResponse {
 	}
 }
 
+const MAKEHUB_BASE_URL = "https://api.makehub.ai/v1"
+const MAKEHUB_DEFAULT_TEMPERATURE = 0
+
+const DEFAULT_HEADERS = {
+	"HTTP-Referer": "https://cline.bot",
+	"X-Title": "Cline",
+	"X-Makehub-Metadata": JSON.stringify({
+		labels: [{ key: "app", value: `vscode.${Package.publisher}.${Package.name}` }],
+	}),
+}
+
+/**
+ * MakeHub API handler for Cline
+ * Provides access to multiple AI models through MakeHub's unified API
+ * Supports performance/price ratio optimization and model routing
+ */
 export class MakehubHandler implements ApiHandler {
 	private options: ApiHandlerOptions
 	private client: OpenAI
@@ -51,12 +73,9 @@ export class MakehubHandler implements ApiHandler {
 	constructor(options: ApiHandlerOptions) {
 		this.options = options
 		this.client = new OpenAI({
-			baseURL: "https://api.makehub.ai/v1",
+			baseURL: MAKEHUB_BASE_URL,
 			apiKey: this.options.makehubApiKey,
-			defaultHeaders: {
-				"HTTP-Referer": "https://cline.bot",
-				"X-Title": "Cline",
-			},
+			defaultHeaders: DEFAULT_HEADERS,
 		})
 	}
 
@@ -75,26 +94,34 @@ export class MakehubHandler implements ApiHandler {
 		const perfRatio = this.options.makehubPerfRatio ?? 0.5 // Default balanced value
 
 		// Check if we need to use R1 format for specific models
-		const modelId = model.id.toLowerCase()
-		if (modelId.includes("deepseek") || modelId.includes("qwen") || modelId.includes("qwq")) {
+		const modelLower = model.id.toLowerCase()
+		if (modelLower.includes("deepseek") || modelLower.includes("qwen") || modelLower.includes("qwq")) {
 			openAiMessages = convertToR1Format([{ role: "user", content: systemPrompt }, ...messages])
 		}
 
 		try {
-			// Prepare options for the request with streaming explicitly enabled
-			const response = await this.client.chat.completions.create(
-				{
-					model: model.id,
-					messages: openAiMessages,
-					stream: true,
-					temperature: 0,
-				},
-				{
-					headers: {
-						"X-Price-Performance-Ratio": `${Math.round(perfRatio * 100)}`,
-					},
-				},
-			)
+			// Prepare request options
+			const requestOptions: OpenAI.Chat.ChatCompletionCreateParams = {
+				model: model.id,
+				messages: openAiMessages,
+				stream: true,
+			}
+
+			// Set temperature if supported
+			if (this.supportsTemperature(model.id)) {
+				requestOptions.temperature = MAKEHUB_DEFAULT_TEMPERATURE
+			}
+
+			// Set performance ratio header
+			const headers = {
+				...DEFAULT_HEADERS,
+				"X-Price-Performance-Ratio": `${Math.round(perfRatio * 100)}`,
+			}
+
+			// Make API request with proper headers
+			const { data: response } = await this.client.chat.completions
+				.create(requestOptions, { headers })
+				.withResponse()
 
 			let didOutputUsage: boolean = false
 			const modelInfo = model.info
@@ -104,6 +131,11 @@ export class MakehubHandler implements ApiHandler {
 				// Capture the generation ID for future statistics
 				if (!this.lastGenerationId && chunk.id) {
 					this.lastGenerationId = chunk.id
+				}
+
+				// Skip malformed chunks
+				if (!chunk.choices || chunk.choices.length === 0) {
+					continue
 				}
 
 				const delta = chunk.choices[0]?.delta
@@ -116,15 +148,27 @@ export class MakehubHandler implements ApiHandler {
 
 				// Handle usage statistics if present
 				if (!didOutputUsage && chunk.usage) {
+					// Validate token counts to prevent unreasonable values
+					const promptTokens = chunk.usage.prompt_tokens || 0
+					const completionTokens = chunk.usage.completion_tokens || 0
+
+					// Check if token counts are reasonable (typically not more than 100k tokens in a single request)
+					const maxReasonableTokens = 100000
+					const validPromptTokens = promptTokens > maxReasonableTokens ? maxReasonableTokens : promptTokens
+					const validCompletionTokens = completionTokens > maxReasonableTokens ? maxReasonableTokens : completionTokens
+
+					if (promptTokens > maxReasonableTokens || completionTokens > maxReasonableTokens) {
+						console.warn("MakeHub returned unusually high token counts, applying limits", {
+							original: { promptTokens, completionTokens },
+							corrected: { validPromptTokens, validCompletionTokens },
+						})
+					}
+
 					yield {
 						type: "usage",
-						inputTokens: chunk.usage.prompt_tokens || 0,
-						outputTokens: chunk.usage.completion_tokens || 0,
-						totalCost: this.calculateCost(
-							chunk.usage.prompt_tokens || 0,
-							chunk.usage.completion_tokens || 0,
-							modelInfo,
-						),
+						inputTokens: validPromptTokens,
+						outputTokens: validCompletionTokens,
+						totalCost: this.calculateCost(validPromptTokens, validCompletionTokens, modelInfo),
 					}
 					didOutputUsage = true
 				}
@@ -137,8 +181,29 @@ export class MakehubHandler implements ApiHandler {
 					yield apiStreamUsage
 				}
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.error("Error communicating with the MakeHub API:", error)
+			
+			// Provide more detailed error information
+			if (error.response) {
+				console.error("MakeHub API Error Response:", {
+					status: error.response.status,
+					statusText: error.response.statusText,
+					data: error.response.data,
+				})
+				
+				// Handle specific error cases
+				if (error.response.status === 401) {
+					throw new Error("Invalid MakeHub API key. Please check your API key and try again.")
+				} else if (error.response.status === 429) {
+					throw new Error("Rate limit exceeded. Please wait a moment and try again.")
+				} else if (error.response.status >= 500) {
+					throw new Error("MakeHub service is temporarily unavailable. Please try again later.")
+				}
+			} else if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+				throw new Error("Unable to connect to MakeHub API. Please check your internet connection.")
+			}
+			
 			throw error
 		}
 	}
@@ -147,13 +212,46 @@ export class MakehubHandler implements ApiHandler {
 	 * Calculate the total cost based on input and output tokens
 	 */
 	private calculateCost(inputTokens: number, outputTokens: number, modelInfo: ModelInfo): number {
+		// Validate inputs
+		if (!modelInfo || typeof modelInfo.inputPrice !== "number" || typeof modelInfo.outputPrice !== "number") {
+			console.warn("MakeHub: Invalid model pricing information", { modelInfo })
+			return 0
+		}
+
+		if (inputTokens < 0 || outputTokens < 0) {
+			console.warn("MakeHub: Invalid token counts", { inputTokens, outputTokens })
+			return 0
+		}
+
 		const inputCostPerMillion = modelInfo.inputPrice || 0
 		const outputCostPerMillion = modelInfo.outputPrice || 0
 
 		const inputCost = (inputTokens / 1_000_000) * inputCostPerMillion
 		const outputCost = (outputTokens / 1_000_000) * outputCostPerMillion
+		const totalCost = inputCost + outputCost
 
-		return inputCost + outputCost
+		// Log for debugging only if cost seems unusual
+		if (totalCost > 10) {
+			console.log("MakeHub high cost calculation:", {
+				inputTokens,
+				outputTokens,
+				inputPrice: modelInfo.inputPrice,
+				outputPrice: modelInfo.outputPrice,
+				inputCost,
+				outputCost,
+				totalCost,
+			})
+		}
+
+		return Math.max(0, totalCost)
+	}
+
+	/**
+	 * Check if the model supports temperature parameter
+	 */
+	private supportsTemperature(modelId: string): boolean {
+		// Most models support temperature, but exclude o3-mini variants like OpenAI
+		return !modelId.toLowerCase().includes("o3-mini")
 	}
 
 	/**
@@ -168,24 +266,30 @@ export class MakehubHandler implements ApiHandler {
 				const response = await axios.get(`https://api.makehub.ai/v1/completions?id=${this.lastGenerationId}`, {
 					headers: {
 						Authorization: `Bearer ${this.options.makehubApiKey}`,
+						...DEFAULT_HEADERS,
 					},
 					timeout: 10000,
 				})
 
 				const data = response.data
 				if (data && data.usage) {
+					const modelInfo = this.getModel().info
 					return {
 						type: "usage",
 						cacheWriteTokens: data.usage.cache_writes || 0,
 						cacheReadTokens: data.usage.cache_reads || 0,
 						inputTokens: data.usage.prompt_tokens || 0,
 						outputTokens: data.usage.completion_tokens || 0,
-						totalCost: data.usage.total_cost || 0,
+						totalCost: data.usage.total_cost || this.calculateCost(
+							data.usage.prompt_tokens || 0,
+							data.usage.completion_tokens || 0,
+							modelInfo
+						),
 					}
 				}
 			} catch (error) {
 				// Ignore errors and continue
-				console.error("Error retrieving Makehub usage statistics:", error)
+				console.error("Error retrieving MakeHub usage statistics:", error)
 			}
 		}
 		return undefined

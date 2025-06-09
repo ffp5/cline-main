@@ -23,6 +23,9 @@ export async function refreshMakehubModels(controller: Controller, request: Empt
 			headers: {
 				"HTTP-Referer": "https://cline.bot",
 				"X-Title": "Cline",
+				"X-Makehub-Metadata": JSON.stringify({
+					labels: [{ key: "app", value: "vscode.saoudrizwan.claude-dev" }],
+				}),
 			},
 			timeout: 10000,
 		})
@@ -42,20 +45,20 @@ export async function refreshMakehubModels(controller: Controller, request: Empt
 			// Convert to ModelInfo format
 			for (const rawModel of filteredModels) {
 				const modelInfo: Partial<MakehubModelInfo> = {
-					maxTokens: rawModel.max_tokens || 8192, // max_tokens is not in API, using default
+					maxTokens: rawModel.max_tokens || 8192,
 					contextWindow: rawModel.context ? rawModel.context * 1024 : 0, // context is in K, converting to total tokens
-					supportsImages: rawModel.supports_images ?? rawModel.capabilities?.image_input ?? false, // API doesn't provide this directly
-					supportsPromptCache: rawModel.supports_prompt_cache ?? false, // API doesn't provide this
+					supportsImages: rawModel.supports_images ?? rawModel.capabilities?.image_input ?? false,
+					supportsPromptCache: rawModel.supports_prompt_cache ?? false,
 					inputPrice: parsePrice(rawModel.price_per_input_token),
 					outputPrice: parsePrice(rawModel.price_per_output_token),
 					cacheWritesPrice: parsePrice(
 						rawModel.supports_prompt_cache && rawModel.cache_writes_price ? rawModel.cache_writes_price : undefined,
-					), // API doesn't provide cache prices
+					),
 					cacheReadsPrice: parsePrice(
 						rawModel.supports_prompt_cache && rawModel.cache_reads_price ? rawModel.cache_reads_price : undefined,
-					), // API doesn't provide cache prices
+					),
 					description: rawModel.model_name || rawModel.model_id,
-					displayName: rawModel.display_name || rawModel.model_id,
+					displayName: rawModel.display_name || rawModel.model_name || rawModel.model_id,
 				}
 				models[rawModel.model_id] = modelInfo
 			}

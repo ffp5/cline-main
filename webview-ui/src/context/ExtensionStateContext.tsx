@@ -67,6 +67,7 @@ interface ExtensionStateContextType extends ExtensionState {
 
 	// Refresh functions
 	refreshOpenRouterModels: () => void
+	refreshMakehubModels: () => void
 
 	// Navigation state setters
 	setShowMcp: (value: boolean) => void
@@ -447,6 +448,17 @@ export const ExtensionStateContextProvider: React.FC<{
 			.catch((error: Error) => console.error("Failed to refresh OpenRouter models:", error))
 	}, [])
 
+	const refreshMakehubModels = useCallback(() => {
+		ModelsServiceClient.refreshMakehubModels(EmptyRequest.create({}))
+			.then((res) => {
+				setMakehubModels({
+					[makehubDefaultModelId]: makehubDefaultModelInfo,
+					...res.models,
+				})
+			})
+			.catch((error: Error) => console.error("Failed to refresh MakeHub models:", error))
+	}, [])
+
 	const contextValue: ExtensionStateContextType = {
 		...state,
 		didHydrateState,
@@ -580,6 +592,7 @@ export const ExtensionStateContextProvider: React.FC<{
 		setMcpTab,
 		setTotalTasksSize,
 		refreshOpenRouterModels,
+		refreshMakehubModels,
 	}
 
 	return <ExtensionStateContext.Provider value={contextValue}>{children}</ExtensionStateContext.Provider>
