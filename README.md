@@ -1,49 +1,198 @@
-<div align="center"><sub>
-English | <a href="https://github.com/cline/cline/blob/main/locales/es/README.md" target="_blank">Español</a> | <a href="https://github.com/cline/cline/blob/main/locales/de/README.md" target="_blank">Deutsch</a> | <a href="https://github.com/cline/cline/blob/main/locales/ja/README.md" target="_blank">日本語</a> | <a href="https://github.com/cline/cline/blob/main/locales/zh-cn/README.md" target="_blank">简体中文</a> | <a href="https://github.com/cline/cline/blob/main/locales/zh-tw/README.md" target="_blank">繁體中文</a> | <a href="https://github.com/cline/cline/blob/main/locales/ko/README.md" target="_blank">한국어</a>
-</sub></div>
+<div align="center">
+<sub>
 
-# Cline – \#1 on OpenRouter
+English • [Español](locales/es/README.md) • [Deutsch](locales/de/README.md) • [日本語](locales/ja/README.md) • [简体中文](locales/zh-cn/README.md) • [繁體中文](locales/zh-tw/README.md) • [한국어](locales/ko/README.md)
 
-<p align="center">
+</sub>
+</div>
+<br>
+<div align="center">
+  <h1>MakeHub AI Development Assistant</h1>
+  <p align="center">
   <img src="https://media.githubusercontent.com/media/cline/cline/main/assets/docs/demo.gif" width="100%" />
-</p>
+  </p>
+  <p>AI-powered autonomous coding agent enhanced with MakeHub.ai's intelligent model routing and cost optimization</p>
+  
+  <a href="https://makehub.ai" target="_blank"><img src="https://img.shields.io/badge/Visit%20MakeHub.ai-6B46C1?style=for-the-badge&logo=globe&logoColor=white" alt="Visit MakeHub.ai"></a>
+  <a href="https://discord.gg/makehub" target="_blank"><img src="https://img.shields.io/badge/Join%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join Discord"></a>
+  
+</div>
+<br>
+<br>
 
 <div align="center">
-<table>
-<tbody>
-<td align="center">
-<a href="https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev" target="_blank"><strong>Download on VS Marketplace</strong></a>
-</td>
-<td align="center">
-<a href="https://discord.gg/cline" target="_blank"><strong>Discord</strong></a>
-</td>
-<td align="center">
-<a href="https://www.reddit.com/r/cline/" target="_blank"><strong>r/cline</strong></a>
-</td>
-<td align="center">
-<a href="https://github.com/cline/cline/discussions/categories/feature-requests?discussions_q=is%3Aopen+category%3A%22Feature+Requests%22+sort%3Atop" target="_blank"><strong>Feature Requests</strong></a>
-</td>
-<td align="center">
-<a href="https://docs.cline.bot/getting-started/for-new-coders" target="_blank"><strong>Getting Started</strong></a>
-</td>
-</tbody>
-</table>
+
+<a href="https://marketplace.visualstudio.com/items?itemName=makehub.makehub-dev" target="_blank"><img src="https://img.shields.io/badge/Download%20on%20VS%20Marketplace-blue?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="Download on VS Marketplace"></a>
+<a href="https://github.com/makehub/makehub-cline/discussions/categories/feature-requests" target="_blank"><img src="https://img.shields.io/badge/Feature%20Requests-yellow?style=for-the-badge" alt="Feature Requests"></a>
+<a href="https://marketplace.visualstudio.com/items?itemName=makehub.makehub-dev&ssr=false#review-details" target="_blank"><img src="https://img.shields.io/badge/Rate%20%26%20Review-green?style=for-the-badge" alt="Rate & Review"></a>
+<a href="https://makehub.ai/docs" target="_blank"><img src="https://img.shields.io/badge/Documentation-6B46C1?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Documentation"></a>
+
 </div>
 
-Meet Cline, an AI assistant that can use your **CLI** a**N**d **E**ditor.
+**MakeHub AI Development Assistant** is an AI-powered **autonomous coding agent** based on Cline and enhanced with MakeHub's intelligent model routing technology. It can:
 
-Thanks to [Claude 3.7 Sonnet's agentic coding capabilities](https://www.anthropic.com/claude/sonnet), Cline can handle complex software development tasks step-by-step. With tools that let him create & edit files, explore large projects, use the browser, and execute terminal commands (after you grant permission), he can assist you in ways that go beyond code completion or tech support. Cline can even use the Model Context Protocol (MCP) to create new tools and extend his own capabilities. While autonomous AI scripts traditionally run in sandboxed environments, this extension provides a human-in-the-loop GUI to approve every file change and terminal command, providing a safe and accessible way to explore the potential of agentic AI.
+- Communicate in natural language
+- Read and write files directly in your workspace
+- Run terminal commands with your permission
+- Automate browser actions for web development
+- Integrate with multiple AI providers through **MakeHub's intelligent routing**
+- Automatically select the **best model for each task** based on performance and cost
+- Use the Model Context Protocol (MCP) to extend capabilities
 
-1. Enter your task and add images to convert mockups into functional apps or fix bugs with screenshots.
-2. Cline starts by analyzing your file structure & source code ASTs, running regex searches, and reading relevant files to get up to speed in existing projects. By carefully managing what information is added to context, Cline can provide valuable assistance even for large, complex projects without overwhelming the context window.
-3. Once Cline has the information he needs, he can:
-    - Create and edit files + monitor linter/compiler errors along the way, letting him proactively fix issues like missing imports and syntax errors on his own.
-    - Execute commands directly in your terminal and monitor their output as he works, letting him e.g., react to dev server issues after editing a file.
-    - For web development tasks, Cline can launch the site in a headless browser, click, type, scroll, and capture screenshots + console logs, allowing him to fix runtime errors and visual bugs.
-4. When a task is completed, Cline will present the result to you with a terminal command like `open -a "Google Chrome" index.html`, which you run with a click of a button.
+Whether you're building prototypes or production applications, MakeHub AI Development Assistant helps you code faster while optimizing your AI costs through intelligent model selection.
+
+---
+
+## 🎉 About MakeHub.ai
+
+MakeHub.ai provides intelligent AI model routing that automatically selects the best model for each development task. This VS Code extension brings that power directly to your development environment, combining the capabilities of Cline with MakeHub's cost and performance optimization technology.
+
+**Key Benefits:**
+
+- **Smart Model Selection** - Automatically choose the best model for each specific task
+- **Cost Optimization** - Balance performance with cost efficiency
+- **Multi-Provider Support** - Access models from OpenAI, Anthropic, Google, and more
+- **Real-time Analytics** - Monitor usage, costs, and performance
+
+---
+
+## What Can MakeHub AI Development Assistant Do?
+
+- 🚀 **Generate Code** from natural language descriptions
+- 🔧 **Refactor & Debug** existing code with error monitoring
+- 📝 **Write & Update** documentation and comments
+- 🤔 **Answer Questions** about your codebase with context awareness
+- 🔄 **Automate** repetitive development tasks
+- 🏗️ **Create** new files, folders, and project structures
+- 🌐 **Test Web Apps** using integrated browser automation
+- 💰 **Optimize AI Costs** through intelligent model routing
+
+## Quick Start
+
+1. [Install MakeHub AI Development Assistant](https://marketplace.visualstudio.com/items?itemName=makehub.makehub-dev)
+2. [Get your MakeHub API key](https://makehub.ai) or use your existing AI provider keys
+3. Start coding with AI assistance optimized for each task
+
+## Key Features
+
+### Intelligent Model Routing
+
+MakeHub AI Development Assistant integrates with MakeHub.ai's intelligent routing to:
+
+- **Task-Specific Models**: Automatically select the best model for coding, debugging, documentation, etc.
+- **Cost Efficiency**: Balance model performance with your budget preferences
+- **Provider Diversity**: Access multiple AI providers through a unified interface
+- **Fallback Protection**: Automatic failover when models are unavailable
+
+### Autonomous Development Capabilities
+
+The assistant can handle complex development workflows:
+
+- **File Operations**: Create, read, edit, and organize files in your workspace
+- **Terminal Integration**: Execute commands and monitor output in real-time
+- **Browser Automation**: Test web applications, capture screenshots, and debug issues
+- **Error Handling**: Automatically detect and fix compilation errors and linting issues
+- **Project Understanding**: Analyze large codebases using AST parsing and intelligent search
+
+### Human-in-the-Loop Safety
+
+Every action requires your approval:
+
+- **Permission System**: Review and approve all file changes and command executions
+- **Change Preview**: See exactly what will be modified before approving
+- **Rollback Capability**: Undo changes if needed
+- **Safe Environment**: No autonomous actions without explicit user consent
+
+### Advanced Integrations
+
+Extend functionality through:
+
+- **MCP Integration**: Use Model Context Protocol for custom tools and external services
+- **Multi-Provider Support**: Connect to OpenAI, Anthropic, Google, OpenRouter, and more
+- **Custom Instructions**: Personalize the assistant's behavior for your workflow
+- **Project Context**: Maintain awareness of your entire codebase and development environment
+
+## Resources
+
+### MakeHub.ai Platform
+
+- **Website:** [https://makehub.ai](https://makehub.ai)
+- **API Dashboard:** Monitor usage, costs, and model performance
+- **Model Catalog:** Browse available AI models and their capabilities
+
+### Community & Support
+
+- **Discord:** [Join our Discord server](https://discord.gg/makehub) for real-time help and discussions
+- **GitHub:** Report [issues](https://github.com/makehub/makehub-cline/issues) or request [features](https://github.com/makehub/makehub-cline/discussions/categories/feature-requests)
+- **Documentation:** [Comprehensive guides and tutorials](https://makehub.ai/docs)
+
+---
+
+## Development & Contributing
+
+### Local Setup
+
+1. **Clone** the repository:
+
+```sh
+git clone https://github.com/makehub/makehub-cline.git
+```
+
+2. **Install dependencies**:
+
+```sh
+npm install
+cd webview-ui && npm install
+```
+
+3. **Run the extension**:
+
+Press `F5` (or **Run** → **Start Debugging**) in VSCode to open a new window with the extension running.
+
+Changes to the webview will appear immediately. Changes to the core extension will require restarting the extension host.
+
+### Building for Distribution
+
+Build a `.vsix` package for manual installation:
+
+```sh
+npm run package
+```
+
+The `.vsix` file can be installed with:
+
+```sh
+code --install-extension makehub-<version>.vsix
+```
+
+---
+
+## Disclaimer
+
+**Please note** that MakeHub.ai does **not** make any representations or warranties regarding any code, models, or other tools provided or made available in connection with MakeHub AI Development Assistant, any associated third-party tools, or any resulting outputs. You assume **all risks** associated with the use of any such tools or outputs; such tools are provided on an **"AS IS"** and **"AS AVAILABLE"** basis. Such risks may include, without limitation, intellectual property infringement, cyber vulnerabilities or attacks, bias, inaccuracies, errors, defects, viruses, downtime, property loss or damage, and/or personal injury. You are solely responsible for your use of any such tools or outputs (including, without limitation, the legality, appropriateness, and results thereof).
+
+---
+
+## Contributing
+
+We welcome community contributions! This project is based on Cline and enhanced with MakeHub's technology. Please read our contributing guidelines before submitting pull requests.
+
+---
+
+## Acknowledgments
+
+This project is based on [Cline](https://github.com/cline/cline) and enhanced with MakeHub.ai's intelligent model routing technology. We thank the original Cline team and contributors for their excellent work in creating this powerful AI development assistant.
+
+## License
+
+[Apache 2.0 © 2025 MakeHub.ai](./LICENSE)
+
+---
+
+**Enjoy MakeHub AI Development Assistant!** Experience the power of AI-assisted development with intelligent model selection and cost optimization. Whether you're building prototypes or production applications, MakeHub helps you code smarter and spend less. Visit [MakeHub.ai](https://makehub.ai) to learn more about our intelligent AI model routing platform.
 
 > [!TIP]
-> Use the `CMD/CTRL + Shift + P` shortcut to open the command palette and type "Cline: Open In New Tab" to open the extension as a tab in your editor. This lets you use Cline side-by-side with your file explorer, and see how he changes your workspace more clearly.
+> Use the `CMD/CTRL + Shift + P` shortcut to open the command palette and type "MakeHub: Open In New Tab" to open the extension as a tab in your editor. This lets you use MakeHub side-by-side with your file explorer, and see how it changes your workspace more clearly.
 
 ---
 

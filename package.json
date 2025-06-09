@@ -1,22 +1,22 @@
 {
-	"name": "claude-dev",
-	"displayName": "Cline",
-	"description": "Autonomous coding agent right in your IDE, capable of creating/editing files, running commands, using the browser, and more with your permission every step of the way.",
-	"version": "3.17.9",
+	"name": "makehub-dev",
+	"displayName": "MakeHub(Plan/Act)",
+	"description": "Autonomous coding agent powered by MakeHub AI, capable of creating/editing files, running commands, using the browser, and more with your permission every step of the way.",
+	"version": "1.0.0",
 	"icon": "assets/icons/icon.png",
 	"engines": {
 		"vscode": "^1.84.0"
 	},
 	"author": {
-		"name": "Cline Bot Inc."
+		"name": "MakeHub"
 	},
 	"license": "Apache-2.0",
-	"publisher": "saoudrizwan",
+	"publisher": "Makehub",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/cline/cline"
+		"url": "https://github.com/ffp5/cline-main"
 	},
-	"homepage": "https://cline.bot",
+	"homepage": "https://makehub.ai",
 	"categories": [
 		"AI",
 		"Chat",
@@ -27,17 +27,18 @@
 	],
 	"keywords": [
 		"cline",
-		"claude",
-		"dev",
-		"mcp",
-		"openrouter",
+		"roo_code",
+		"makehub",
+		"ai",
 		"coding",
 		"agent",
 		"autonomous",
-		"chatgpt",
-		"sonnet",
-		"ai",
-		"llama"
+		"assistant",
+		"development",
+		"programming",
+		"llm",
+		"chat",
+		"automation"
 	],
 	"activationEvents": [
 		"onLanguage",
@@ -50,13 +51,13 @@
 			"activitybar": [
 				{
 					"id": "claude-dev-ActivityBar",
-					"title": "Cline (⌘+')",
+					"title": "MakeHub(Plan/Act) (⌘+')",
 					"icon": "assets/icons/icon.svg",
 					"when": "isMac"
 				},
 				{
 					"id": "claude-dev-ActivityBar",
-					"title": "Cline (Ctrl+')",
+					"title": "MakeHub(Plan/Act) (Ctrl+')",
 					"icon": "assets/icons/icon.svg",
 					"when": "!isMac"
 				}
@@ -105,44 +106,44 @@
 			{
 				"command": "cline.openInNewTab",
 				"title": "Open In New Tab",
-				"category": "Cline"
+				"category": "MakeHub"
 			},
 			{
 				"command": "cline.dev.createTestTasks",
 				"title": "Create Test Tasks",
-				"category": "Cline",
+				"category": "MakeHub",
 				"when": "cline.isDevMode"
 			},
 			{
 				"command": "cline.addToChat",
-				"title": "Add to Cline",
-				"category": "Cline"
+				"title": "Add to MakeHub",
+				"category": "MakeHub"
 			},
 			{
 				"command": "cline.addTerminalOutputToChat",
-				"title": "Add to Cline",
-				"category": "Cline"
+				"title": "Add to MakeHub",
+				"category": "MakeHub"
 			},
 			{
 				"command": "cline.focusChatInput",
 				"title": "Jump to Chat Input",
-				"category": "Cline"
+				"category": "MakeHub"
 			},
 			{
 				"command": "cline.generateGitCommitMessage",
-				"title": "Generate Commit Message with Cline",
-				"category": "Cline",
+				"title": "Generate Commit Message with MakeHub",
+				"category": "MakeHub",
 				"icon": "$(robot)"
 			},
 			{
 				"command": "cline.explainCode",
-				"title": "Explain with Cline",
-				"category": "Cline"
+				"title": "Explain with MakeHub",
+				"category": "MakeHub"
 			},
 			{
 				"command": "cline.improveCode",
-				"title": "Improve with Cline",
-				"category": "Cline"
+				"title": "Improve with MakeHub",
+				"category": "MakeHub"
 			}
 		],
 		"keybindings": [
@@ -260,7 +261,7 @@
 			]
 		},
 		"configuration": {
-			"title": "Cline",
+			"title": "MakeHub(Plan/Act)",
 			"properties": {}
 		}
 	},
