@@ -3,7 +3,7 @@ import { memo, useEffect, useState } from "react"
 import { useFirebaseAuth } from "@/context/FirebaseAuthContext"
 import { vscode } from "@/utils/vscode"
 import VSCodeButtonLink from "../common/VSCodeButtonLink"
-import ClineLogoWhite from "../../assets/ClineLogoWhite"
+import MakeHubLogoWhite from "../../assets/ClineLogoWhite"
 import CountUp from "react-countup"
 import CreditsHistoryTable from "./CreditsHistoryTable"
 import { UsageTransaction, PaymentTransaction } from "@shared/ClineAccount"
@@ -157,7 +157,7 @@ export const ClineAccountView = () => {
 				</div>
 			) : (
 				<div className="flex flex-col items-center pr-3">
-					<ClineLogoWhite className="size-16 mb-4" />
+					<MakeHubLogoWhite className="size-16 mb-4" />
 
 					<p style={{}}>
 						Sign up for an account to get access to the latest models, billing dashboard to view usage and credits,

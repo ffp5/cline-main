@@ -271,13 +271,8 @@ export async function getAllExtensionState(context: vscode.ExtensionContext) {
 		apiProvider = storedApiProvider
 	} else {
 		// Either new user or legacy user that doesn't have the apiProvider stored in state
-		// (If they're using OpenRouter or Bedrock, then apiProvider state will exist)
-		if (apiKey) {
-			apiProvider = "anthropic"
-		} else {
-			// New users should default to openrouter, since they've opted to use an API key instead of signing in
-			apiProvider = "openrouter"
-		}
+		// Default to MakeHub for new users
+		apiProvider = "makehub"
 	}
 
 	const localClineRulesToggles = (await getWorkspaceState(context, "localClineRulesToggles")) as ClineRulesToggles

@@ -1,8 +1,8 @@
 {
 	"name": "makehub-dev",
-	"displayName": "MakeHub(Plan/Act)",
+	"displayName": "MakeHub(Cline based)",
 	"description": "Autonomous coding agent powered by MakeHub AI, capable of creating/editing files, running commands, using the browser, and more with your permission every step of the way.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"icon": "assets/icons/icon.png",
 	"engines": {
 		"vscode": "^1.84.0"

@@ -4,7 +4,7 @@ import { useExtensionState } from "@/context/ExtensionStateContext"
 import { validateApiConfiguration } from "@/utils/validate"
 import { vscode } from "@/utils/vscode"
 import ApiOptions from "@/components/settings/ApiOptions"
-import ClineLogoWhite from "@/assets/ClineLogoWhite"
+import MakeHubLogoWhite from "@/assets/ClineLogoWhite"
 import { AccountServiceClient } from "@/services/grpc-client"
 import { EmptyRequest } from "@shared/proto/common"
 
@@ -34,7 +34,7 @@ const WelcomeView = memo(() => {
 			<div className="h-full px-5 overflow-auto">
 				<h2>Hi, I'm MakeHub</h2>
 				<div className="flex justify-center my-5">
-					<ClineLogoWhite className="size-16" />
+					<MakeHubLogoWhite className="size-16" />
 				</div>
 				<p>
 					I can do all kinds of tasks thanks to breakthroughs in AI technology and access to tools that let me create & edit files, explore complex projects, use
