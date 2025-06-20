@@ -11,8 +11,8 @@ import { convertToR1Format } from "../transform/r1-format"
 
 // Package info for metadata headers
 const Package = {
-	publisher: "saoudrizwan",
-	name: "claude-dev"
+	publisher: "MakeHubCline",
+	name: "makehubcline-dev"
 }
 
 export interface MakehubModelResponse {

@@ -11,7 +11,7 @@ const EXTENSION_DIR = process.env.EXTENSION_DIR ?? "."
 const EXTENSION_MODE = process.env.IS_DEV === "true" ? ExtensionMode.Development : ExtensionMode.Production
 
 const extension: Extension<void> = {
-	id: "saoudrizwan.claude-dev",
+	id: "MakeHubCline.makehubcline-dev",
 	isActive: true,
 	extensionPath: EXTENSION_DIR,
 	extensionUri: URI.file(EXTENSION_DIR),

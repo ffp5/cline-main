@@ -6,6 +6,7 @@ import path from "path"
 import fs from "fs/promises"
 import { fileExistsAtPath } from "@utils/fs"
 import { GlobalFileNames } from "@core/storage/disk"
+import { getSecret } from "@core/storage/state"
 
 /**
  * Refreshes the MakeHub models and returns the updated model list
@@ -19,12 +20,18 @@ export async function refreshMakehubModels(controller: Controller, request: Empt
 	let models: Record<string, Partial<MakehubModelInfo>> = {}
 
 	try {
+		const apiKey = await getSecret(controller.context, "makehubApiKey")
+		if (!apiKey) {
+			throw new Error("MakeHub API key is not configured. Please set your API key in the extension settings.")
+		}
+
 		const response = await axios.get("https://api.makehub.ai/v1/models", {
 			headers: {
+				Authorization: `Bearer ${apiKey}`,
 				"HTTP-Referer": "https://cline.bot",
 				"X-Title": "Cline",
 				"X-Makehub-Metadata": JSON.stringify({
-					labels: [{ key: "app", value: "vscode.saoudrizwan.claude-dev" }],
+					labels: [{ key: "app", value: "vscode.MakeHubCline.makehubcline-dev" }],
 				}),
 			},
 			timeout: 10000,
